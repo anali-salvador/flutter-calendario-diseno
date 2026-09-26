@@ -12,10 +12,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: const Color(0xFF1A1A1A), // fondo alrededor en web
+        backgroundColor: const Color(0xFF1A1A1A),
         body: Center(
           child: Container(
-            width: 420, // ancho tipo celular
+            width: 420,
             constraints: const BoxConstraints(maxHeight: 900),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(28),
@@ -73,6 +73,8 @@ class CalendarioScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   _chips(),
+                  const SizedBox(height: 18),
+                  _fraseMotivacional(),
                   const SizedBox(height: 20),
                   _eventos(),
                   const SizedBox(height: 20),
@@ -320,6 +322,75 @@ class CalendarioScreen extends StatelessWidget {
           const SizedBox(width: 8),
           Text(texto, style: TextStyle(color: activo ? Colors.white : color, fontWeight: FontWeight.bold, fontSize: 13.5)),
         ],
+      ),
+    );
+  }
+
+  // ---------------- FRASE MOTIVACIONAL ----------------
+  Widget _fraseMotivacional() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: SizedBox(
+          height: 130,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.network(
+                'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+                fit: BoxFit.cover,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      kMorado.withOpacity(0.75),
+                      kTeal.withOpacity(0.65),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(18),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 42,
+                      height: 42,
+                      decoration: BoxDecoration(color: Colors.white.withOpacity(0.25), shape: BoxShape.circle),
+                      child: const Icon(Icons.format_quote_rounded, color: Colors.white, size: 22),
+                    ),
+                    const SizedBox(width: 14),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '"Cada día es una nueva oportunidad para avanzar"',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.w700,
+                              height: 1.3,
+                            ),
+                          ),
+                          SizedBox(height: 6),
+                          Text(
+                            'Frase del día',
+                            style: TextStyle(color: Colors.white70, fontSize: 11.5),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
