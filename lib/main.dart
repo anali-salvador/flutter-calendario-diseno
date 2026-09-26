@@ -15,13 +15,11 @@ class MyApp extends StatelessWidget {
         backgroundColor: const Color(0xFF1A1A1A),
         body: Center(
           child: Container(
-            width: 420,
-            constraints: const BoxConstraints(maxHeight: 900),
+            width: 430,
+            constraints: const BoxConstraints(maxHeight: 950),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(28),
-              boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 30, offset: const Offset(0, 10)),
-              ],
+              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 30, offset: const Offset(0, 10))],
             ),
             clipBehavior: Clip.antiAlias,
             child: const CalendarioScreen(),
@@ -32,32 +30,32 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Paleta vívida
-const Color kFondo = Color(0xFFF4EFE6);
-const Color kMorado = Color(0xFF7C3AED);
-const Color kCoral = Color(0xFFFF4D6D);
-const Color kTeal = Color(0xFF00BFA6);
-const Color kAmbar = Color(0xFFFFA400);
-const Color kAzul = Color(0xFF3B82F6);
-const Color kTexto = Color(0xFF2B2438);
+// Paleta
+const Color kCrema = Color(0xFFF6EFE2);
+const Color kVino = Color(0xFF5C1A3D);
+const Color kVerde = Color(0xFF2F5233);
+const Color kAmbar = Color(0xFFD98C3D);
+const Color kCoral = Color(0xFFE0563F);
+const Color kTexto = Color(0xFF3A2A2E);
+const kSerif = 'Georgia';
 
 class CalendarioScreen extends StatelessWidget {
   const CalendarioScreen({super.key});
 
   static const Map<String, Map<String, dynamic>> diasEspeciales = {
-    '5': {'tipo': 'destacado', 'color': kMorado},
-    '21': {'tipo': 'destacado2', 'color': kTeal},
-    '12': {'tipo': 'evento', 'color': kCoral},
+    '5': {'tipo': 'destacado', 'color': kVino},
+    '21': {'tipo': 'destacado2', 'color': kVerde},
+    '12': {'tipo': 'evento', 'color': kAmbar},
     '18': {'tipo': 'evento', 'color': kAmbar},
-    '8': {'tipo': 'especial', 'color': kAzul},
-    '13': {'tipo': 'especial', 'color': kAzul},
-    '14': {'tipo': 'especial', 'color': kAzul},
+    '8': {'tipo': 'especial', 'color': kVerde},
+    '13': {'tipo': 'especial', 'color': kVerde},
+    '14': {'tipo': 'especial', 'color': kVerde},
   };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kFondo,
+      backgroundColor: kCrema,
       body: Stack(
         children: [
           SafeArea(
@@ -67,18 +65,16 @@ class CalendarioScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _header(),
-                  Transform.translate(
-                    offset: const Offset(0, -28),
-                    child: _calendario(),
-                  ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 14),
                   _chips(),
-                  const SizedBox(height: 18),
-                  _fraseMotivacional(),
-                  const SizedBox(height: 20),
-                  _eventos(),
-                  const SizedBox(height: 20),
-                  _fechasEspeciales(),
+                  const SizedBox(height: 16),
+                  _calendario(),
+                  const SizedBox(height: 14),
+                  _filaFechas(),
+                  const SizedBox(height: 12),
+                  _filaFraseEnfoque(),
+                  const SizedBox(height: 12),
+                  _filaEventos(),
                   const SizedBox(height: 100),
                 ],
               ),
@@ -92,83 +88,70 @@ class CalendarioScreen extends StatelessWidget {
 
   // ---------------- HEADER ----------------
   Widget _header() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(26),
-        child: SizedBox(
-          height: 190,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.network(
-                'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80',
-                fit: BoxFit.cover,
+    return SizedBox(
+      height: 210,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.network(
+            'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80',
+            fit: BoxFit.cover,
+          ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [kVino.withOpacity(0.85), kVino.withOpacity(0.1)],
+                stops: const [0.0, 0.7],
               ),
-              Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0x996D28D9),
-                      Color(0xAAFF3D68),
-                    ],
+            ),
+          ),
+          Positioned(
+            top: 14,
+            left: 14,
+            child: Row(
+              children: [_circleBtn(Icons.arrow_back_ios_new_rounded), const SizedBox(width: 10), _circleBtn(Icons.arrow_forward_ios_rounded)],
+            ),
+          ),
+          Positioned(top: 14, right: 14, child: _circleBtn(Icons.event_available_rounded)),
+          Positioned(
+            left: 18,
+            bottom: 22,
+            right: 90,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: const [
+                    Icon(Icons.waving_hand_rounded, size: 14, color: kAmbar),
+                    SizedBox(width: 6),
+                    Text(
+                      'Hola, Anali',
+                      style: TextStyle(color: kAmbar, fontSize: 13, fontWeight: FontWeight.w600, fontFamily: kSerif),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Septiembre 2026',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 27,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: kSerif,
+                    shadows: [Shadow(color: Colors.black54, blurRadius: 6, offset: Offset(0, 2))],
                   ),
                 ),
-              ),
-              Positioned(
-                top: 14,
-                left: 14,
-                child: Row(
-                  children: [
-                    _circleBtn(Icons.chevron_left),
-                    const SizedBox(width: 10),
-                    _circleBtn(Icons.chevron_right),
-                  ],
+                const SizedBox(height: 4),
+                const Text(
+                  'Tu mes, tus planes',
+                  style: TextStyle(color: Colors.white70, fontSize: 14, fontFamily: kSerif, fontStyle: FontStyle.italic),
                 ),
-              ),
-              Positioned(
-                top: 14,
-                right: 14,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    _circleBtn(Icons.calendar_today_rounded),
-                    Positioned(
-                      right: -2,
-                      top: -2,
-                      child: Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          color: kAmbar,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 1.5),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Positioned(
-                left: 18,
-                bottom: 44,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Septiembre 2026',
-                      style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 4),
-                    Text('Tu mes, tus planes', style: TextStyle(color: Colors.white, fontSize: 13)),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -177,8 +160,51 @@ class CalendarioScreen extends StatelessWidget {
     return Container(
       width: 36,
       height: 36,
-      decoration: BoxDecoration(color: Colors.white.withOpacity(0.9), shape: BoxShape.circle),
-      child: Icon(icon, color: kMorado, size: 20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(colors: [kVino, Color(0xFF7A2650)]),
+        shape: BoxShape.circle,
+        boxShadow: [BoxShadow(color: kVino.withOpacity(0.4), blurRadius: 8, offset: const Offset(0, 3))],
+      ),
+      child: Icon(icon, color: Colors.white, size: 16),
+    );
+  }
+
+  // ---------------- CHIPS ----------------
+  Widget _chips() {
+    return SizedBox(
+      height: 44,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        children: [
+          _chip('Todos', Icons.apps_rounded, true, kVino),
+          _chip('Trabajo', Icons.business_center_rounded, false, kAmbar),
+          _chip('Personal', Icons.favorite_rounded, false, kCoral),
+          _chip('Estudio', Icons.menu_book_rounded, false, kVerde),
+        ],
+      ),
+    );
+  }
+
+  Widget _chip(String texto, IconData icon, bool activo, Color color) {
+    return Container(
+      margin: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+      decoration: BoxDecoration(
+        gradient: activo ? LinearGradient(colors: [color, color.withOpacity(0.75)]) : null,
+        color: activo ? null : color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: color.withOpacity(activo ? 0 : 0.4)),
+        boxShadow: activo ? [BoxShadow(color: color.withOpacity(0.4), blurRadius: 10, offset: const Offset(0, 4))] : [],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 17, color: activo ? Colors.white : color),
+          const SizedBox(width: 7),
+          Text(texto, style: TextStyle(color: activo ? Colors.white : kTexto, fontWeight: FontWeight.w600, fontSize: 13.5, fontFamily: kSerif)),
+        ],
+      ),
     );
   }
 
@@ -189,28 +215,26 @@ class CalendarioScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: kMorado.withOpacity(0.12), width: 1.5),
-          boxShadow: [
-            BoxShadow(color: kMorado.withOpacity(0.15), blurRadius: 18, offset: const Offset(0, 8)),
-          ],
+          color: const Color(0xFFFFFBF3),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: kVino.withOpacity(0.1), width: 1.3),
+          boxShadow: [BoxShadow(color: kVino.withOpacity(0.1), blurRadius: 16, offset: const Offset(0, 6))],
         ),
         child: Column(
           children: [
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Lun', style: TextStyle(color: kMorado, fontWeight: FontWeight.bold, fontSize: 12)),
-                Text('Mar', style: TextStyle(color: kMorado, fontWeight: FontWeight.bold, fontSize: 12)),
-                Text('Mié', style: TextStyle(color: kMorado, fontWeight: FontWeight.bold, fontSize: 12)),
-                Text('Jue', style: TextStyle(color: kMorado, fontWeight: FontWeight.bold, fontSize: 12)),
-                Text('Vie', style: TextStyle(color: kMorado, fontWeight: FontWeight.bold, fontSize: 12)),
-                Text('Sáb', style: TextStyle(color: kMorado, fontWeight: FontWeight.bold, fontSize: 12)),
-                Text('Dom', style: TextStyle(color: kMorado, fontWeight: FontWeight.bold, fontSize: 12)),
+                Text('Lun', style: TextStyle(color: kVino, fontWeight: FontWeight.bold, fontSize: 12)),
+                Text('Mar', style: TextStyle(color: kVino, fontWeight: FontWeight.bold, fontSize: 12)),
+                Text('Mié', style: TextStyle(color: kVino, fontWeight: FontWeight.bold, fontSize: 12)),
+                Text('Jue', style: TextStyle(color: kVino, fontWeight: FontWeight.bold, fontSize: 12)),
+                Text('Vie', style: TextStyle(color: kVino, fontWeight: FontWeight.bold, fontSize: 12)),
+                Text('Sáb', style: TextStyle(color: kVino, fontWeight: FontWeight.bold, fontSize: 12)),
+                Text('Dom', style: TextStyle(color: kVino, fontWeight: FontWeight.bold, fontSize: 12)),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             _filaSemana(['31', '1', '2', '3', '4', '5', '6']),
             const SizedBox(height: 8),
             _filaSemana(['7', '8', '9', '10', '11', '12', '13']),
@@ -227,53 +251,47 @@ class CalendarioScreen extends StatelessWidget {
   }
 
   Widget _filaSemana(List<String> dias) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: dias.map((d) => _diaWidget(d)).toList(),
-    );
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: dias.map((d) => _diaWidget(d)).toList());
   }
 
   Widget _diaWidget(String dia) {
     final especial = diasEspeciales[dia];
-
     if (especial == null) {
       return Container(
-        width: 38,
-        height: 38,
+        width: 36,
+        height: 36,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: kTexto.withOpacity(0.08), width: 1),
+          border: Border.all(color: kVino.withOpacity(0.08), width: 1),
         ),
-        child: Text(dia, style: const TextStyle(fontSize: 13.5, color: kTexto)),
+        child: Text(dia, style: const TextStyle(fontSize: 14, color: kTexto)),
       );
     }
-
     if (especial['tipo'] == 'destacado' || especial['tipo'] == 'destacado2') {
       final color = especial['color'] as Color;
       return Container(
-        width: 38,
-        height: 38,
+        width: 36,
+        height: 36,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(10),
+          gradient: LinearGradient(colors: [color, color.withOpacity(0.75)]),
+          shape: BoxShape.circle,
           boxShadow: [BoxShadow(color: color.withOpacity(0.5), blurRadius: 10, offset: const Offset(0, 3))],
         ),
-        child: Text(dia, style: const TextStyle(fontSize: 13.5, color: Colors.white, fontWeight: FontWeight.bold)),
+        child: Text(dia, style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold)),
       );
     }
-
     final color = especial['color'] as Color;
     final esEspecial = especial['tipo'] == 'especial';
     return Container(
-      width: 38,
-      height: 38,
+      width: 36,
+      height: 36,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: color.withOpacity(0.5), width: 1.4),
-        color: color.withOpacity(0.08),
+        border: Border.all(color: color.withOpacity(0.45), width: 1.3),
+        color: color.withOpacity(0.1),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -288,294 +306,23 @@ class CalendarioScreen extends StatelessWidget {
     );
   }
 
-  // ---------------- CHIPS ----------------
-  Widget _chips() {
-    return SizedBox(
-      height: 46,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        children: [
-          _chip('Todos', Icons.grid_view_rounded, true, kMorado),
-          _chip('Trabajo', Icons.work_outline_rounded, false, kAmbar),
-          _chip('Personal', Icons.favorite_border_rounded, false, kCoral),
-          _chip('Estudio', Icons.school_outlined, false, kAzul),
-        ],
-      ),
-    );
-  }
-
-  Widget _chip(String texto, IconData icon, bool activo, Color color) {
-    return Container(
-      margin: const EdgeInsets.only(right: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        color: activo ? color : Colors.white,
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: color, width: 1.4),
-        boxShadow: activo ? [BoxShadow(color: color.withOpacity(0.4), blurRadius: 10, offset: const Offset(0, 4))] : [],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 18, color: activo ? Colors.white : color),
-          const SizedBox(width: 8),
-          Text(texto, style: TextStyle(color: activo ? Colors.white : color, fontWeight: FontWeight.bold, fontSize: 13.5)),
-        ],
-      ),
-    );
-  }
-
-  // ---------------- FRASE MOTIVACIONAL ----------------
-  Widget _fraseMotivacional() {
+  // ---------------- FILA: FECHAS ESPECIALES + FERIADO/LEYENDA ----------------
+  Widget _filaFechas() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: SizedBox(
-          height: 130,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.network(
-                'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
-                fit: BoxFit.cover,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      kMorado.withOpacity(0.75),
-                      kTeal.withOpacity(0.65),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(18),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 42,
-                      height: 42,
-                      decoration: BoxDecoration(color: Colors.white.withOpacity(0.25), shape: BoxShape.circle),
-                      child: const Icon(Icons.format_quote_rounded, color: Colors.white, size: 22),
-                    ),
-                    const SizedBox(width: 14),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '"Cada día es una nueva oportunidad para avanzar"',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14.5,
-                              fontWeight: FontWeight.w700,
-                              height: 1.3,
-                            ),
-                          ),
-                          SizedBox(height: 6),
-                          Text(
-                            'Frase del día',
-                            style: TextStyle(color: Colors.white70, fontSize: 11.5),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ---------------- EVENTOS ----------------
-  Widget _eventos() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'EVENTOS DESTACADOS',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: kTexto, letterSpacing: 0.5),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(color: kMorado.withOpacity(0.12), borderRadius: BorderRadius.circular(20)),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Ver todo', style: TextStyle(color: kMorado, fontWeight: FontWeight.bold, fontSize: 12)),
-                    Icon(Icons.arrow_forward_rounded, color: kMorado, size: 14),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _eventoItem(kMorado, Icons.groups_rounded, 'Reunión de equipo', '5 sep', '10:00 a.m.'),
-          const SizedBox(height: 12),
-          _eventoItem(kCoral, Icons.school_rounded, 'Examen de programación', '12 sep', '9:00 a.m.'),
-          const SizedBox(height: 12),
-          _eventoItem(kAmbar, Icons.event_note_rounded, 'Entrega de laboratorio', '18 sep', '11:59 p.m.'),
-          const SizedBox(height: 12),
-          _eventoItem(kTeal, Icons.trending_up_rounded, 'Presentación de proyecto', '21 sep', '2:00 p.m.'),
-        ],
-      ),
-    );
-  }
-
-  Widget _eventoItem(Color color, IconData icon, String titulo, String fecha, String hora) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [color.withOpacity(0.16), color.withOpacity(0.05)],
-        ),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: color.withOpacity(0.4), width: 1.6),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 46,
-            height: 46,
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: [BoxShadow(color: color.withOpacity(0.45), blurRadius: 10, offset: const Offset(0, 4))],
-            ),
-            child: Icon(icon, color: Colors.white, size: 22),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(titulo, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5, color: kTexto)),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Icon(Icons.calendar_today_rounded, size: 11, color: color),
-                    const SizedBox(width: 4),
-                    Text(fecha, style: TextStyle(fontSize: 11.5, color: color, fontWeight: FontWeight.bold)),
-                    const SizedBox(width: 10),
-                    Icon(Icons.access_time_rounded, size: 11, color: kTexto.withOpacity(0.4)),
-                    const SizedBox(width: 4),
-                    Text(hora, style: TextStyle(fontSize: 11.5, color: kTexto.withOpacity(0.55))),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: 28,
-            height: 28,
-            decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-            child: Icon(Icons.chevron_right, color: color, size: 18),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ---------------- FECHAS ESPECIALES ----------------
-  Widget _fechasEspeciales() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: kAzul.withOpacity(0.3), width: 1.6),
-          boxShadow: [BoxShadow(color: kAzul.withOpacity(0.1), blurRadius: 14, offset: const Offset(0, 6))],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [kAzul, Color(0xFF60A5FA)]),
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(19), topRight: Radius.circular(19)),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.25), shape: BoxShape.circle),
-                    child: const Icon(Icons.eco, color: Colors.white, size: 16),
-                  ),
-                  const SizedBox(width: 10),
-                  const Text(
-                    'FECHAS ESPECIALES',
-                    style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w900, letterSpacing: 0.5),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
+            Expanded(flex: 3, child: _fechasEspecialesCard()),
+            const SizedBox(width: 10),
+            Expanded(
+              flex: 2,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: kAmbar.withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: kAmbar.withOpacity(0.5), width: 1.4),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 34,
-                          height: 34,
-                          decoration: BoxDecoration(color: kAmbar, borderRadius: BorderRadius.circular(10)),
-                          child: const Icon(Icons.calendar_month_rounded, color: Colors.white, size: 18),
-                        ),
-                        const SizedBox(width: 10),
-                        const Expanded(
-                          child: Text.rich(
-                            TextSpan(
-                              children: [
-                                TextSpan(text: 'Próximo feriado nacional\n', style: TextStyle(fontSize: 10.5, color: Colors.grey)),
-                                TextSpan(
-                                  text: '8 oct · Combate de Angamos',
-                                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: kTexto),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const Icon(Icons.chevron_right, color: kAmbar, size: 18),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      _fechaChip('8 sep · Cochabamba'),
-                      _fechaChip('13 sep · Junín'),
-                      _fechaChip('14 sep · Locumba'),
-                    ],
-                  ),
+                  _feriadoChip(),
+                  const SizedBox(height: 10),
+                  Expanded(child: _leyendaCard()),
                 ],
               ),
             ),
@@ -585,20 +332,355 @@ class CalendarioScreen extends StatelessWidget {
     );
   }
 
-  Widget _fechaChip(String texto) {
+  Widget _fechasEspecialesCard() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: kAzul.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: kAzul.withOpacity(0.3)),
+        color: kVerde.withOpacity(0.07),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: kVerde.withOpacity(0.25), width: 1.3),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 26,
+                height: 26,
+                decoration: BoxDecoration(color: kVerde, borderRadius: BorderRadius.circular(8)),
+                child: const Icon(Icons.park_rounded, color: Colors.white, size: 14),
+              ),
+              const SizedBox(width: 8),
+              const Text('Fechas especiales', style: TextStyle(color: kVino, fontSize: 14.5, fontWeight: FontWeight.bold, fontFamily: kSerif)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          _fechaRow('8 sep · Cochabamba · regional'),
+          _fechaRow('13 sep · Junín · regional'),
+          _fechaRow('14 sep · Señor de Locumba · regional'),
+        ],
+      ),
+    );
+  }
+
+  Widget _fechaRow(String texto) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: kVerde.withOpacity(0.2)),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.local_florist_rounded, size: 13, color: kVerde),
+            const SizedBox(width: 6),
+            Expanded(child: Text(texto, style: const TextStyle(fontSize: 11, color: kTexto))),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _feriadoChip() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: kAmbar.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: kAmbar.withOpacity(0.4), width: 1.3),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.eco, size: 12, color: kAzul),
-          const SizedBox(width: 5),
-          Text(texto, style: const TextStyle(fontSize: 11, color: kAzul, fontWeight: FontWeight.w600)),
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(color: kAmbar, borderRadius: BorderRadius.circular(9)),
+            child: const Icon(Icons.flag_rounded, color: Colors.white, size: 16),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text.rich(
+              TextSpan(children: [
+                const TextSpan(text: 'Próximo feriado\n', style: TextStyle(fontSize: 9.5, color: Colors.grey)),
+                const TextSpan(text: '8 oct · Angamos', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10.5, color: kTexto)),
+              ]),
+            ),
+          ),
+          const Icon(Icons.chevron_right, size: 16, color: kAmbar),
+        ],
+      ),
+    );
+  }
+
+  Widget _leyendaCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: kVino.withOpacity(0.06),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: kVino.withOpacity(0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _leyendaItem(Icons.local_florist_rounded, kVerde, 'Eventos'),
+          const SizedBox(height: 8),
+          _leyendaDot(kAmbar, 'Fechas regionales'),
+          const SizedBox(height: 8),
+          _leyendaDot(kVerde, 'Hoy'),
+        ],
+      ),
+    );
+  }
+
+  Widget _leyendaItem(IconData icon, Color color, String texto) {
+    return Row(children: [Icon(icon, size: 13, color: color), const SizedBox(width: 6), Text(texto, style: const TextStyle(fontSize: 11, color: kTexto))]);
+  }
+
+  Widget _leyendaDot(Color color, String texto) {
+    return Row(children: [
+      Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+      const SizedBox(width: 8),
+      Text(texto, style: const TextStyle(fontSize: 11, color: kTexto)),
+    ]);
+  }
+
+  // ---------------- FILA: FRASE + ENFOQUE ----------------
+  Widget _filaFraseEnfoque() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(child: _fraseCard()),
+            const SizedBox(width: 10),
+            Expanded(child: _enfoqueCard()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _fraseCard() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(18),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.network(
+            'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80',
+            fit: BoxFit.cover,
+          ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [kVino.withOpacity(0.25), kVino.withOpacity(0.75)],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Icon(Icons.format_quote_rounded, color: kAmbar, size: 20),
+                SizedBox(height: 4),
+                Text(
+                  'Cada línea de código es un paso hacia lo que imaginas.',
+                  style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold, fontFamily: kSerif, height: 1.3),
+                ),
+                SizedBox(height: 8),
+                Text('— Para inspirarte hoy', style: TextStyle(color: Colors.white70, fontSize: 10, fontStyle: FontStyle.italic)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _enfoqueCard() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [kVino, Color(0xFF7A2650)]),
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [BoxShadow(color: kVino.withOpacity(0.4), blurRadius: 14, offset: const Offset(0, 6))],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.flag_circle_rounded, color: kAmbar, size: 20),
+              SizedBox(width: 6),
+              Expanded(
+                child: Text('Enfoque de la semana',
+                    style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold, fontFamily: kSerif)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _checkItem('Repasar programación'),
+          const SizedBox(height: 8),
+          _checkItem('Preparar presentación'),
+        ],
+      ),
+    );
+  }
+
+  Widget _checkItem(String texto) {
+    return Row(
+      children: [
+        Container(
+          width: 18,
+          height: 18,
+          decoration: BoxDecoration(color: kAmbar.withOpacity(0.9), borderRadius: BorderRadius.circular(5)),
+          child: const Icon(Icons.check_rounded, color: Colors.white, size: 13),
+        ),
+        const SizedBox(width: 8),
+        Expanded(child: Text(texto, style: const TextStyle(color: Colors.white, fontSize: 11.5))),
+      ],
+    );
+  }
+
+  // ---------------- FILA: EVENTOS + CONTADOR ----------------
+  Widget _filaEventos() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text('Eventos destacados', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: kVino, fontFamily: kSerif)),
+              Row(children: [
+                Text('Ver todo', style: TextStyle(color: kVino, fontWeight: FontWeight.bold, fontSize: 12)),
+                Icon(Icons.chevron_right, color: kVino, size: 16),
+              ]),
+            ],
+          ),
+          const SizedBox(height: 12),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    children: [
+                      _eventoItem(kVino, Icons.groups_2_rounded, 'Reunión de equipo', '5 de septiembre · 10:00 a. m.'),
+                      const SizedBox(height: 8),
+                      _eventoItem(kCoral, Icons.school_rounded, 'Examen de programación', '12 de septiembre · 9:00 a. m.'),
+                      const SizedBox(height: 8),
+                      _eventoItem(kAmbar, Icons.assignment_turned_in_rounded, 'Entrega de laboratorio', '18 de septiembre · 11:59 p. m.'),
+                      const SizedBox(height: 8),
+                      _eventoItem(kVerde, Icons.insights_rounded, 'Presentación de proyecto', '21 de septiembre · 2:00 p. m.'),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(flex: 2, child: _contadorCard()),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _eventoItem(Color color, IconData icon, String titulo, String subtitulo) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.06),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: color.withOpacity(0.3), width: 1.3),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 4,
+            height: 40,
+            decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
+          ),
+          const SizedBox(width: 10),
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [color, color.withOpacity(0.75)]),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [BoxShadow(color: color.withOpacity(0.4), blurRadius: 6, offset: const Offset(0, 2))],
+            ),
+            child: Icon(icon, color: Colors.white, size: 17),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(titulo, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5, color: kTexto)),
+                const SizedBox(height: 2),
+                Text(subtitulo, style: const TextStyle(fontSize: 10.5, color: Colors.grey)),
+              ],
+            ),
+          ),
+          Icon(Icons.chevron_right, color: color, size: 18),
+        ],
+      ),
+    );
+  }
+
+  Widget _contadorCard() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [kVino, Color(0xFF7A2650)]),
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [BoxShadow(color: kVino.withOpacity(0.4), blurRadius: 14, offset: const Offset(0, 6))],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          RichText(
+            textAlign: TextAlign.center,
+            text: const TextSpan(children: [
+              TextSpan(text: '4 ', style: TextStyle(color: kAmbar, fontSize: 20, fontWeight: FontWeight.bold, fontFamily: kSerif)),
+              TextSpan(text: 'eventos\ndel mes', style: TextStyle(color: Colors.white, fontSize: 12, fontFamily: kSerif)),
+            ]),
+          ),
+          const SizedBox(height: 14),
+          SizedBox(
+            width: 74,
+            height: 74,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  width: 74,
+                  height: 74,
+                  child: CircularProgressIndicator(
+                    value: 0.65,
+                    strokeWidth: 7,
+                    backgroundColor: Colors.white.withOpacity(0.15),
+                    valueColor: const AlwaysStoppedAnimation<Color>(kAmbar),
+                  ),
+                ),
+                const Icon(Icons.event_available_rounded, color: Colors.white, size: 24),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -611,12 +693,12 @@ class CalendarioScreen extends StatelessWidget {
       right: 0,
       bottom: 0,
       child: Container(
-        height: 78,
+        height: 76,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFFFFFBF3),
           borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
-          border: Border.all(color: kMorado.withOpacity(0.1), width: 1.4),
-          boxShadow: [BoxShadow(color: kMorado.withOpacity(0.15), blurRadius: 16, offset: const Offset(0, -4))],
+          border: Border.all(color: kVino.withOpacity(0.1), width: 1.3),
+          boxShadow: [BoxShadow(color: kVino.withOpacity(0.15), blurRadius: 16, offset: const Offset(0, -4))],
         ),
         child: Stack(
           clipBehavior: Clip.none,
@@ -627,26 +709,26 @@ class CalendarioScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _navItem(Icons.calendar_today_rounded, 'Calendario', true),
-                  _navItem(Icons.check_circle_outline_rounded, 'Tareas', false),
+                  _navItem(Icons.calendar_month_rounded, 'Calendario', true),
+                  _navItem(Icons.task_alt_rounded, 'Tareas', false),
                   const SizedBox(width: 56),
-                  _navItem(Icons.person_outline_rounded, 'Perfil', false),
+                  _navItem(Icons.person_rounded, 'Perfil', false),
                   const SizedBox(width: 4),
                 ],
               ),
             ),
             Positioned(
-              top: -22,
+              top: -20,
               child: Container(
-                width: 58,
-                height: 58,
+                width: 56,
+                height: 56,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [kMorado, kCoral]),
+                  gradient: const LinearGradient(colors: [kVino, kCoral]),
                   shape: BoxShape.circle,
-                  boxShadow: [BoxShadow(color: kMorado.withOpacity(0.5), blurRadius: 14, offset: const Offset(0, 6))],
-                  border: Border.all(color: kFondo, width: 4),
+                  boxShadow: [BoxShadow(color: kVino.withOpacity(0.5), blurRadius: 14, offset: const Offset(0, 6))],
+                  border: Border.all(color: kCrema, width: 4),
                 ),
-                child: const Icon(Icons.add, color: Colors.white, size: 26),
+                child: const Icon(Icons.add_rounded, color: Colors.white, size: 26),
               ),
             ),
           ],
@@ -659,22 +741,23 @@ class CalendarioScreen extends StatelessWidget {
     if (activo) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(color: kMorado, borderRadius: BorderRadius.circular(20)),
-        child: Row(
-          children: [
-            Icon(icon, color: Colors.white, size: 18),
-            const SizedBox(width: 6),
-            Text(label, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
-          ],
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(colors: [kVino, Color(0xFF7A2650)]),
+          borderRadius: BorderRadius.circular(20),
         ),
+        child: Row(children: [
+          Icon(icon, color: Colors.white, size: 17),
+          const SizedBox(width: 6),
+          Text(label, style: const TextStyle(color: Colors.white, fontSize: 11.5, fontWeight: FontWeight.w600)),
+        ]),
       );
     }
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: kTexto.withOpacity(0.4), size: 22),
+        Icon(icon, color: kTexto.withOpacity(0.35), size: 21),
         const SizedBox(height: 2),
-        Text(label, style: TextStyle(color: kTexto.withOpacity(0.4), fontSize: 11)),
+        Text(label, style: TextStyle(color: kTexto.withOpacity(0.35), fontSize: 10.5)),
       ],
     );
   }
